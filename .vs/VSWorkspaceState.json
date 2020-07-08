@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\API\\Controllers",
+    "\\API\\Properties",
+    "\\Core\\Entities",
+    "\\Infrastructure\\Data",
+    "\\Infrastructure\\Data\\Migrations"
+  ],
+  "PreviewInSolutionExplorer": false
+}
