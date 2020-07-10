@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Helpers;
+using AutoMapper;
 using Core.Interfaces;
 using Infastructure.Data;
 using Infrastructure.Data;
@@ -30,8 +32,13 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(MappingProfiles));
             services.AddControllers();
+            // Defines the lifetime of product repository
             services.AddScoped<IProductRepository, ProductRepository>();
+            // Defines lifetime of the generic repository, typeof is used as the type is not defined(thing in the angle bracket)
+            services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
+            // Defines the what db is being used and the server path
             services.AddDbContext<StoreContext>(x => x.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
         }
 
@@ -46,6 +53,8 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 

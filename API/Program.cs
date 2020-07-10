@@ -13,15 +13,23 @@ namespace API
     {
         public static async Task Main(string[] args)
         {
+                       
             var host = CreateHostBuilder(args).Build();
+
+            // "using" creates and destroys when session starts and ends.
+            // Autonomously generates things we need on program startup
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+
+                // Shows logs
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 try
                 {
                     var context = services.GetRequiredService<StoreContext>();
+                    // Migrates
                     await context.Database.MigrateAsync();
+                    // Seeds
                     await StoreContextSeed.SeedAsync(context, loggerFactory);
                 }
                 catch(Exception ex)
