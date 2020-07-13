@@ -10,16 +10,15 @@ using Core.Interfaces;
 using Core.Specifications;
 using API.Dtos;
 using AutoMapper;
+using API.Errors;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
-    // Defines it as API controller, serves HTTP responses
-    [ApiController]
-    // Declares the route
-    [Route("api/[controller]")]
+    
 
     // Class inherits from Controller. ControllerBase is a controller w/o views
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> _productsRepo;
         private readonly IGenericRepository<ProductType> _productTypeRepo;
@@ -42,7 +41,6 @@ namespace API.Controllers
 
         // Http Get method, standard no parameters
         [HttpGet]
-
         // Asynchronously returns a list of products.
         // CALLS THE REPOSITORY METHODS
         public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
@@ -50,18 +48,25 @@ namespace API.Controllers
             var spec = new ProductsWithTypesAndBrandsSpecification();
             var products = await _productsRepo.ListAsync(spec);
 
+            if (products == null) return NotFound(new ApiResponse(404));
+
             return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
         }
 
         // Http Get method with the id as a parameter
         [HttpGet("{id}")]
-
+        // Let's Swagger expect the following status codes
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         // Asynchronously returns a single product defined by the HTTP Get.
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             // Creates a new instance of specification
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
             var product = await _productsRepo.GetEntityWithSpec(spec);
+
+            // If product does not exist, return a 404 error
+            if (product == null) return NotFound(new ApiResponse(404));
 
             // Maps the ProductToReturnDto to Product
             return _mapper.Map<Product, ProductToReturnDto>(product);
