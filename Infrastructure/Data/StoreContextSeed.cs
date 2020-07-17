@@ -10,27 +10,30 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
+    // Seeds database from JSON files
     public class StoreContextSeed
     {
+        // "static" allows the method to run without creating an instance of the class
         public static async Task SeedAsync(StoreContext context, ILoggerFactory loggerFactory)
         {
             try
             {
+                // If no data exists, seed
                 if (!context.ProductBrands.Any())
                 {
+                    // Read the file
                     var brandsData = File.ReadAllText("../Infrastructure/Data/SeedData/brands.json");
 
+                    // Convert the file text to objects
                     var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandsData);
 
+                    // Add the objects to the context
                     foreach (var item in brands)
                     {
                         context.ProductBrands.Add(item);
                     }
 
                     await context.SaveChangesAsync();
-                }
-                else
-                {
                 }
 
                 if (!context.ProductTypes.Any())

@@ -3,6 +3,7 @@
 
 namespace Core.Entities
 {
+    // Inherits BaseEntity's properties, which is just ID
 	public class Product : BaseEntity
 	{
 

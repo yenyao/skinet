@@ -4,6 +4,8 @@ using Core.Entities;
 
 namespace Core.Interfaces
 {
+	// Interface of Product Repository
+	// Declares what methods are used
 	public interface IProductRepository
 	{
 		Task<Product> GetProductByIdAsync(int id);

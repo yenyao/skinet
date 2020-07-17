@@ -6,6 +6,7 @@ namespace API.Helpers
 {
     public class MappingProfiles : Profile
     {
+        // Maps the product with the Dto format
         public MappingProfiles()
         {
             CreateMap<Product, ProductToReturnDto>()
