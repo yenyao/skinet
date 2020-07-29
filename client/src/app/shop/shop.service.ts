@@ -6,15 +6,17 @@ import { IType } from '../shared/models/productType';
 import {map} from 'rxjs/operators';
 import { ShopParams } from '../shared/models/shopParams';
 import { IProduct } from '../shared/models/product';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShopService {
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
+  // tslint:disable-next-line: typedef
   getProducts(shopParams: ShopParams)
   {
     let params = new HttpParams();
@@ -39,21 +41,24 @@ export class ShopService {
 
     return this.http.get<IPagination>(this.baseUrl + 'products', {observe: 'response', params})
     .pipe(
-      map(response =>{
+      map(response => {
         return response.body;
       })
     );
   }
 
+  // tslint:disable-next-line: typedef
   getProduct(id: number) {
     return this.http.get<IProduct>(this.baseUrl + 'products/' + id);
   }
 
+  // tslint:disable-next-line: typedef
   getBrands()
   {
     return this.http.get<IBrand[]>(this.baseUrl + 'products/brands');
   }
 
+  // tslint:disable-next-line: typedef
   getTypes()
   {
     return this.http.get<IType[]>(this.baseUrl + 'products/types');
