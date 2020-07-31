@@ -17,6 +17,9 @@ namespace API.Extensions
         {
             // Defines the lifetime of product repository
             services.AddScoped<IProductRepository, ProductRepository>();
+
+            services.AddScoped<IBasketRepository, BasketRepository>();
+
             // Defines lifetime of the generic repository, typeof is used as the type is not defined(thing in the angle bracket)
             services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
             services.Configure<ApiBehaviorOptions>(options =>

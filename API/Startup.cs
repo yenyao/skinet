@@ -8,16 +8,17 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace API
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _config;
 
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _config = configuration;
         }
 
 
@@ -26,11 +27,18 @@ namespace API
         {
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddControllers();
-           
+
             // Defines the what db is being used and the server path
             services.AddDbContext<StoreContext>(
-                x => x.UseSqlite(_configuration.GetConnectionString("DefaultConnection"))
+                x => x.UseSqlite(_config.GetConnectionString("DefaultConnection"))
             );
+
+            services.AddSingleton<IConnectionMultiplexer>(c => {
+                var configuration = ConfigurationOptions.Parse(_config
+                    .GetConnectionString("Redis"), true);
+                return ConnectionMultiplexer.Connect(configuration);
+            });
+
 
             services.AddApplicationServices();
             services.AddSwaggerDocumentation();

@@ -3,8 +3,8 @@
     "",
     "\\API",
     "\\client",
-    "\\Infrastructure\\Data",
-    "\\Infrastructure\\Data\\Migrations"
+    "\\Infrastructure",
+    "\\Infrastructure\\Data"
   ],
   "SelectedNode": "\\skinet.sln",
   "PreviewInSolutionExplorer": false
