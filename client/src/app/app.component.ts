@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BasketService } from './basket/basket.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,18 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   title = 'SkiNet';
 
-  constructor() {}
+  constructor(private basketService: BasketService) {}
 
+  // Entire app does not refresh, so...
+  // Allows the basket to persist if page is refreshed as opposed to creating a basket each time.
   ngOnInit(): void {
+    const basketId = localStorage.getItem('basket_id');
+    if (basketId) {
+      this.basketService.getBasket(basketId).subscribe(() => {
+        console.log('initialised basket');
+      }, error => {
+        console.log(error);
+      });
+    }
   }
 }
